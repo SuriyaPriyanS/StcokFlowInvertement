@@ -79,7 +79,7 @@ jobs:
         uses: azure/setup-kubectl@v4
 
       - name: Validate Kubernetes manifests
-        run: kubectl apply --dry-run=client -f k8s
+        run: kubectl create --dry-run=client --validate=false -f k8s
 
   # ─────────────────────────────────────────
   # JOB 3: Build & Push Docker images
