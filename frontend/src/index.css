@@ -1,0 +1,254 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts utility classes */
+.font-inter { font-family: 'Inter', system-ui, sans-serif; }
+.font-outfit { font-family: 'Outfit', system-ui, sans-serif; }
+.font-jakarta { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+.font-roboto { font-family: 'Roboto', system-ui, sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* THEME VARIABLES SYSTEM */
+
+/* 1. Corporate Navy (Light background with Deep Navy Sidebar & Blue accents) */
+:root, [data-theme="navy"] {
+  --bg-main: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-sidebar: #0f1d35;
+  --bg-sidebar-hover: #1b2e4f;
+  --bg-sidebar-active: #20355c;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-hover: #f8fafc;
+  --sidebar-text-active: #38bdf8;
+  --border-color: #e2e8f0;
+  --border-sidebar: #1e2e4a;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --accent-color: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-text: #ffffff;
+  --accent-subtle: #dbeafe;
+  --table-header: #f8fafc;
+  --table-border: #e2e8f0;
+  --table-row-hover: #f8fafc;
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --quick-action-bg: #1e2d4a;
+  --quick-action-hover: #26385c;
+  --badge-bg: #e2e8f0;
+  --badge-text: #1e293b;
+}
+
+/* 2. Midnight Amber (Dark Mode Amber) */
+[data-theme="amber"] {
+  --bg-main: #020617;
+  --bg-card: #0b1120;
+  --bg-card-hover: #0f172a;
+  --bg-sidebar: #090d16;
+  --bg-sidebar-hover: #131b2e;
+  --bg-sidebar-active: #1e293b;
+  --sidebar-text: #94a3b8;
+  --sidebar-text-hover: #f8fafc;
+  --sidebar-text-active: #fbbf24;
+  --border-color: #1e293b;
+  --border-sidebar: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-color: #f59e0b;
+  --accent-hover: #d97706;
+  --accent-text: #020617;
+  --accent-subtle: #451a03;
+  --table-header: #070b14;
+  --table-border: #1e293b;
+  --table-row-hover: #0f172a;
+  --input-bg: #0f172a;
+  --input-border: #334155;
+  --quick-action-bg: #131b2e;
+  --quick-action-hover: #1e293b;
+  --badge-bg: #1e293b;
+  --badge-text: #f8fafc;
+}
+
+/* 3. Emerald Forest */
+[data-theme="emerald"] {
+  --bg-main: #031713;
+  --bg-card: #062820;
+  --bg-card-hover: #0a332a;
+  --bg-sidebar: #02231c;
+  --bg-sidebar-hover: #063b30;
+  --bg-sidebar-active: #0c4d3f;
+  --sidebar-text: #6ee7b7;
+  --sidebar-text-hover: #f0fdf4;
+  --sidebar-text-active: #34d399;
+  --border-color: #0d4a3c;
+  --border-sidebar: #0d4a3c;
+  --text-primary: #f0fdf4;
+  --text-secondary: #a7f3d0;
+  --text-muted: #6ee7b7;
+  --accent-color: #10b981;
+  --accent-hover: #059669;
+  --accent-text: #02231c;
+  --accent-subtle: #064e3b;
+  --table-header: #021a14;
+  --table-border: #0d4a3c;
+  --table-row-hover: #0a382e;
+  --input-bg: #062820;
+  --input-border: #0d4a3c;
+  --quick-action-bg: #08382d;
+  --quick-action-hover: #0c4d3f;
+  --badge-bg: #064e3b;
+  --badge-text: #a7f3d0;
+}
+
+/* 4. Royal Violet */
+[data-theme="violet"] {
+  --bg-main: #090312;
+  --bg-card: #170b2c;
+  --bg-card-hover: #1f0f3a;
+  --bg-sidebar: #130924;
+  --bg-sidebar-hover: #23123d;
+  --bg-sidebar-active: #321957;
+  --sidebar-text: #c084fc;
+  --sidebar-text-hover: #faf5ff;
+  --sidebar-text-active: #e9d5ff;
+  --border-color: #2e1853;
+  --border-sidebar: #2e1853;
+  --text-primary: #faf5ff;
+  --text-secondary: #d8b4fe;
+  --text-muted: #a855f7;
+  --accent-color: #a855f7;
+  --accent-hover: #9333ea;
+  --accent-text: #ffffff;
+  --accent-subtle: #3b0764;
+  --table-header: #0f051c;
+  --table-border: #2e1853;
+  --table-row-hover: #22103f;
+  --input-bg: #170b2c;
+  --input-border: #3b1d69;
+  --quick-action-bg: #23123d;
+  --quick-action-hover: #321957;
+  --badge-bg: #3b0764;
+  --badge-text: #e9d5ff;
+}
+
+/* 5. Crimson Ruby */
+[data-theme="crimson"] {
+  --bg-main: #0d0205;
+  --bg-card: #1f0b11;
+  --bg-card-hover: #2b0f17;
+  --bg-sidebar: #1a070c;
+  --bg-sidebar-hover: #2e0d16;
+  --bg-sidebar-active: #40131e;
+  --sidebar-text: #fda4af;
+  --sidebar-text-hover: #fff1f2;
+  --sidebar-text-active: #ffe4e6;
+  --border-color: #3d1421;
+  --border-sidebar: #3d1421;
+  --text-primary: #fff1f2;
+  --text-secondary: #fecdd3;
+  --text-muted: #fb7185;
+  --accent-color: #f43f5e;
+  --accent-hover: #e11d48;
+  --accent-text: #ffffff;
+  --accent-subtle: #4c0519;
+  --table-header: #140409;
+  --table-border: #3d1421;
+  --table-row-hover: #2c0e17;
+  --input-bg: #1f0b11;
+  --input-border: #4f1a2a;
+  --quick-action-bg: #2e0d16;
+  --quick-action-hover: #40131e;
+  --badge-bg: #4c0519;
+  --badge-text: #ffe4e6;
+}
+
+/* 6. Cyber Cyan */
+[data-theme="cyan"] {
+  --bg-main: #011215;
+  --bg-card: #06252b;
+  --bg-card-hover: #09343c;
+  --bg-sidebar: #041f24;
+  --bg-sidebar-hover: #08353d;
+  --bg-sidebar-active: #0d4a55;
+  --sidebar-text: #67e8f9;
+  --sidebar-text-hover: #ecfeff;
+  --sidebar-text-active: #a5f3fc;
+  --border-color: #0e4854;
+  --border-sidebar: #0e4854;
+  --text-primary: #ecfeff;
+  --text-secondary: #a5f3fc;
+  --text-muted: #22d3ee;
+  --accent-color: #06b6d4;
+  --accent-hover: #0891b2;
+  --accent-text: #011215;
+  --accent-subtle: #164e63;
+  --table-header: #02171a;
+  --table-border: #0e4854;
+  --table-row-hover: #093a43;
+  --input-bg: #06252b;
+  --input-border: #0e4854;
+  --quick-action-bg: #08353d;
+  --quick-action-hover: #0d4a55;
+  --badge-bg: #164e63;
+  --badge-text: #a5f3fc;
+}
+
+/* 7. Nordic Light */
+[data-theme="nordic"] {
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-sidebar: #ffffff;
+  --bg-sidebar-hover: #f1f5f9;
+  --bg-sidebar-active: #e2e8f0;
+  --sidebar-text: #475569;
+  --sidebar-text-hover: #0f172a;
+  --sidebar-text-active: #0284c7;
+  --border-color: #e2e8f0;
+  --border-sidebar: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --accent-color: #0284c7;
+  --accent-hover: #0369a1;
+  --accent-text: #ffffff;
+  --accent-subtle: #e0f2fe;
+  --table-header: #f1f5f9;
+  --table-border: #e2e8f0;
+  --table-row-hover: #f8fafc;
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --quick-action-bg: #f1f5f9;
+  --quick-action-hover: #e2e8f0;
+  --badge-bg: #e0f2fe;
+  --badge-text: #0369a1;
+}
+
+/* Base Body Styles */
+body {
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
