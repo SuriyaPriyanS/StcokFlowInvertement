@@ -46,8 +46,43 @@ jobs:
         run: npm test --if-present
         working-directory: frontend
 
+      - name: Build frontend
+        run: npm run build
+        working-directory: frontend
+
   # ─────────────────────────────────────────
-  # JOB 2: Build & Push Docker images
+  # JOB 2: Validate Docker & Kubernetes
+  # ─────────────────────────────────────────
+  validate-deployment:
+    name: 🔍 Validate Docker & Kubernetes
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request' && github.base_ref == 'main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: false
+
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: false
+
+      - name: Setup kubectl
+        uses: azure/setup-kubectl@v4
+
+      - name: Validate Kubernetes manifests
+        run: kubectl apply --dry-run=client -f k8s
+
+  # ─────────────────────────────────────────
+  # JOB 3: Build & Push Docker images
   # ─────────────────────────────────────────
   build-and-push:
     name: 🐳 Build & Push Docker Images
@@ -98,7 +133,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   # ─────────────────────────────────────────
-  # JOB 3: Deploy to Kubernetes
+  # JOB 4: Deploy to Kubernetes
   # ─────────────────────────────────────────
   deploy:
     name: 🚀 Deploy to Kubernetes
