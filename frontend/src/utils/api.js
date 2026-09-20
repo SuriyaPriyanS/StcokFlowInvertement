@@ -3,7 +3,7 @@ import { store } from "../store";
 import { logout } from "../store/slices/authSlice";
 
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: import.meta.env.VITE_API_URL || "https://stcok-flow-invertement-udsj-ku5h1ep84-suriya2.vercel.app/api",
   headers: {
     "Content-Type": "application/json",
   },
