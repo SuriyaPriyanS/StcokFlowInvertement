@@ -33,12 +33,54 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Middlewares
-app.use(cors());
+// ─── CORS Configuration ───────────────────────────────────────────────────────
+const allowedOrigins = [
+  // Add every frontend URL that should be allowed
+  "https://stcok-flow-invertement-udsj-ku5h1ep84-suriya2.vercel.app",
+  "https://stcok-flow-invertement.vercel.app", // root deployment (if any)
+  process.env.FRONTEND_URL,                    // env-driven override
+  "http://localhost:5173",                     // Vite dev
+  "http://localhost:3000",
+].filter(Boolean); // remove undefined entries
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. Postman, server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: origin "${origin}" not allowed`));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+// Handle preflight OPTIONS requests immediately (must be before routes)
+app.options("*", cors(corsOptions));
+
+// Apply CORS to all routes
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Serve static uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
+
+// Vercel serverless: connect MongoDB lazily BEFORE routes are hit
+let isConnected = false;
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    try {
+      await connectDB();
+      isConnected = true;
+    } catch (error) {
+      console.error("MongoDB connection failed:", error.message);
+      return res.status(500).json({ error: "Database connection failed" });
+    }
+  }
+  next();
+});
 
 // Mount Routes
 app.use("/api/auth", authRoutes);
@@ -61,23 +103,6 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-// Vercel serverless: connect MongoDB lazily on first request
-let isConnected = false;
-if (process.env.VERCEL) {
-  app.use(async (req, res, next) => {
-    if (!isConnected) {
-      try {
-        await connectDB();
-        isConnected = true;
-      } catch (error) {
-        console.error("MongoDB connection failed:", error.message);
-        return res.status(500).json({ error: "Database connection failed" });
-      }
-    }
-    next();
-  });
-}
-
 const startServer = async () => {
   try {
     // 1. Connect MongoDB
@@ -99,6 +124,7 @@ const startServer = async () => {
   }
 };
 
+// On Vercel: export app for serverless. Locally: start the server.
 if (!process.env.VERCEL) {
   startServer();
 }
