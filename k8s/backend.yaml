@@ -16,7 +16,7 @@ spec:
       containers:
         - name: backend
           image: stockflow-backend:latest
-          imagePullPolicy: Never
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5000
           envFrom:
