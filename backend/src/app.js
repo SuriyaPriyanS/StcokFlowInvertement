@@ -34,30 +34,15 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // ─── CORS Configuration ───────────────────────────────────────────────────────
-const allowedOrigins = [
-  // Add every frontend URL that should be allowed
-  "https://stcok-flow-invertement-udsj-ku5h1ep84-suriya2.vercel.app",
-  "https://stcok-flow-invertement.vercel.app", // root deployment (if any)
-  process.env.FRONTEND_URL,                    // env-driven override
-  "http://localhost:5173",                     // Vite dev
-  "http://localhost:3000",
-].filter(Boolean); // remove undefined entries
-
+// Simple wildcard — frontend uses Authorization header (not cookies),
+// so credentials:true + origin:"*" conflict is not needed here.
 const corsOptions = {
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. Postman, server-to-server)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS blocked: origin "${origin}" not allowed`));
-    }
-  },
-  credentials: true,
+  origin: "*",
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
-// Handle preflight OPTIONS requests immediately (must be before routes)
+// Handle OPTIONS preflight BEFORE any other middleware
 app.options("*", cors(corsOptions));
 
 // Apply CORS to all routes
