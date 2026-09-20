@@ -1,5 +1,4 @@
 import express from "express";
-import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
@@ -33,21 +32,23 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// ─── CORS Configuration ───────────────────────────────────────────────────────
-// Simple wildcard — frontend uses Authorization header (not cookies),
-// so credentials:true + origin:"*" conflict is not needed here.
-const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+// ─── CORS — must be the very first middleware ──────────────────────────────────
+// Manually set headers so OPTIONS preflight returns BEFORE MongoDB runs.
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-// Handle OPTIONS preflight BEFORE any other middleware
-app.options("*", cors(corsOptions));
+  // Preflight: respond immediately with 204 — do NOT touch MongoDB
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
 
-// Apply CORS to all routes
-app.use(cors(corsOptions));
+  next();
+});
+
 app.use(express.json());
+
 
 // Serve static uploaded files
 app.use("/uploads", express.static(path.join(__dirname, "../public/uploads")));
