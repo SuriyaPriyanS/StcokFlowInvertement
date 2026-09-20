@@ -61,6 +61,23 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
+// Vercel serverless: connect MongoDB lazily on first request
+let isConnected = false;
+if (process.env.VERCEL) {
+  app.use(async (req, res, next) => {
+    if (!isConnected) {
+      try {
+        await connectDB();
+        isConnected = true;
+      } catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        return res.status(500).json({ error: "Database connection failed" });
+      }
+    }
+    next();
+  });
+}
+
 const startServer = async () => {
   try {
     // 1. Connect MongoDB
@@ -82,4 +99,8 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
