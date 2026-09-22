@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 
-// Load env variables
+// Load env variables FIRST before any other imports that may need them
 dotenv.config();
 
 import connectDB from "./config/db.js";
@@ -33,15 +33,41 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // ─── CORS — must be the very first middleware ──────────────────────────────────
-// Manually set headers so OPTIONS preflight returns BEFORE MongoDB runs.
+// Explicitly list allowed origins for reliability on Vercel serverless.
+const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  // Vercel frontend deployments (all preview + production branches)
+  /^https:\/\/stcok-flow-invertement.*\.vercel\.app$/,
+  // Add your custom domain here if you have one, e.g.:
+  // "https://yourdomain.com",
+];
+
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+
+  // Check if origin matches any allowed pattern
+  const isAllowed =
+    !origin || // allow server-to-server (no origin header)
+    ALLOWED_ORIGINS.some((allowed) =>
+      allowed instanceof RegExp ? allowed.test(origin) : allowed === origin
+    );
+
+  if (isAllowed && origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  } else if (!origin) {
+    // Non-browser request (curl, Postman, server-to-server)
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
+
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  // Preflight: respond immediately with 204 — do NOT touch MongoDB
+  // Preflight: respond immediately with 200 — do NOT touch MongoDB
   if (req.method === "OPTIONS") {
-    return res.status(204).end();
+    return res.status(200).end();
   }
 
   next();
@@ -84,8 +110,14 @@ app.use("/api/branches", branchRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/notifications", notificationRoutes);
 
+// Health check — confirms backend is live on Vercel
+app.get("/", (req, res) => {
+  res.json({ status: "ok", message: "StockFlow API is running 🚀", env: process.env.NODE_ENV || "development" });
+});
+
 // Error Handler Middleware
 app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 5000;
 
