@@ -2,20 +2,15 @@ import axios from "axios";
 import { store } from "../store";
 import { logout } from "../store/slices/authSlice";
 
-// In development: use "/api" (relative) → Vite proxy → localhost:5000 (zero CORS issues)
-// In production:  use VITE_API_URL from .env.production (baked in by Vite build)
-const BASE_URL = import.meta.env.PROD
-  ? (import.meta.env.VITE_API_URL || "https://stcok-flow-invertement-udsj-git-master-suriya2.vercel.app/api")
-  : "/api";
-
+// Always use relative "/api" — works in BOTH environments with zero CORS:
+//   DEV:  Vite proxy  →  /api  →  localhost:5000
+//   PROD: Vercel route →  /api  →  Express serverless function (same domain)
 const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: "/api",
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: false,
 });
-
 
 // Request interceptor to attach JWT token
 api.interceptors.request.use(
