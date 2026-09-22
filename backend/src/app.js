@@ -37,10 +37,11 @@ const app = express();
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:5173",
-  // Vercel frontend deployments (all preview + production branches)
+  // All Vercel deployment URLs for this project (with or without project-id slug)
   /^https:\/\/stcok-flow-invertement.*\.vercel\.app$/,
-  // Add your custom domain here if you have one, e.g.:
-  // "https://yourdomain.com",
+  // Explicit short alias (stable production URL without udsj project slug)
+  "https://stcok-flow-invertement-git-master-suriya2.vercel.app",
+  "https://stcok-flow-invertement.vercel.app",
 ];
 
 app.use((req, res, next) => {
