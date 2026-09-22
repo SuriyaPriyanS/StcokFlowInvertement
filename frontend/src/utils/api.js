@@ -2,8 +2,14 @@ import axios from "axios";
 import { store } from "../store";
 import { logout } from "../store/slices/authSlice";
 
+// Use VITE_API_URL env var (set in Vercel frontend project settings)
+// Fallback: stable git-master backend deployment
+const BASE_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://stcok-flow-invertement-udsj-git-master-suriya2.vercel.app/api";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://stcok-flow-invertement-udsj-ku5h1ep84-suriya2.vercel.app/api",
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
