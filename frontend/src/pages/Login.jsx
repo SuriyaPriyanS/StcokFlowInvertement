@@ -78,7 +78,15 @@ export default function Login() {
       dispatch(loginSuccess(res.data));
       navigate("/dashboard");
     } catch (err) {
-      dispatch(loginFailure(err.response?.data?.message || "Authentication failed. Please check credentials."));
+      const errorMsg = 
+        err.response?.data?.message || 
+        err.response?.data?.error?.message || 
+        (err.response?.status === 401 && err.response?.data?.protection 
+          ? "Backend is blocked by Vercel 'Deployment Protection'. Please disable it in Vercel Settings -> Deployment Protection." 
+          : null) ||
+        err.message || 
+        "Authentication failed. Please check credentials.";
+      dispatch(loginFailure(errorMsg));
     }
   };
 
