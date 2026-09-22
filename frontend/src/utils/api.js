@@ -2,11 +2,12 @@ import axios from "axios";
 import { store } from "../store";
 import { logout } from "../store/slices/authSlice";
 
-// In DEV:  "/api" → Vite proxy → localhost:5000  (no CORS)
-// In PROD: absolute Vercel URL → Express serverless  (same domain, CORS allowed)
-const BASE_URL = import.meta.env.PROD
-  ? "https://stcok-flow-invertement-udsj-git-master-suriya2.vercel.app/api"
-  : "/api";
+// Priority order:
+//  1. VITE_API_URL env var (set in Vercel project settings for cross-domain deployments)
+//  2. "/api" fallback — works for:
+//       - Local dev: Vite proxy → localhost:5000  (zero CORS)
+//       - Vercel same-project: /api routes to Express on same domain  (zero CORS)
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 const api = axios.create({
   baseURL: BASE_URL,
@@ -14,7 +15,6 @@ const api = axios.create({
     "Content-Type": "application/json",
   },
 });
-
 
 // Request interceptor to attach JWT token
 api.interceptors.request.use(
