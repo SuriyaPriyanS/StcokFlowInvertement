@@ -7,7 +7,16 @@ import { logout } from "../store/slices/authSlice";
 //  2. "/api" fallback — works for:
 //       - Local dev: Vite proxy → localhost:5000  (zero CORS)
 //       - Vercel same-project: /api routes to Express on same domain  (zero CORS)
-const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const getBaseUrl = () => {
+  if (import.meta.env.DEV) {
+    return "/api";
+  }
+  const rawUrl = (import.meta.env.VITE_API_URL || "https://stcok-flow-invertement-udsj.vercel.app/api").trim();
+  // Automatically strip any Vercel preview/branch subdomains (e.g. -git-master-suriya2) that trigger Vercel SSO 401/302 blocks
+  return rawUrl.replace(/-git-[^.]+\.vercel\.app/, ".vercel.app");
+};
+
+const BASE_URL = getBaseUrl();
 
 const api = axios.create({
   baseURL: BASE_URL,
