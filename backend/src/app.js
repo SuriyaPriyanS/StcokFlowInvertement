@@ -33,15 +33,18 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // ─── CORS — must be the very first middleware ──────────────────────────────────
-// Explicitly list allowed origins for reliability on Vercel serverless.
+// Allow local dev and any Vercel deployment for this project or its aliases.
+// This avoids blocked login calls after frontend redeploys when Vercel changes the
+// generated project URL or preview alias.
 const ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:5173",
-  // All Vercel deployment URLs for this project (with or without project-id slug)
+  /^https:\/\/.*\.vercel\.app$/,
+  /^https:\/\/.*--.*\.vercel\.app$/,
   /^https:\/\/stcok-flow-invertement.*\.vercel\.app$/,
-  // Explicit short alias (stable production URL without udsj project slug)
-  "https://stcok-flow-invertement-git-master-suriya2.vercel.app",
   "https://stcok-flow-invertement.vercel.app",
+  "https://stcok-flow-invertement-git-master-suriya2.vercel.app",
+  "https://stcok-flow-invertement-udsj-git-master-suriya2.vercel.app",
 ];
 
 app.use((req, res, next) => {
