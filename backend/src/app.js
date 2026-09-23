@@ -45,6 +45,7 @@ const ALLOWED_ORIGINS = [
   "https://stcok-flow-invertement.vercel.app",
   "https://stcok-flow-invertement-git-master-suriya2.vercel.app",
   "https://stcok-flow-invertement-udsj-git-master-suriya2.vercel.app",
+  "https://stcok-flow-invertement-udsj.vercel.app",
 ];
 
 app.use((req, res, next) => {
@@ -66,7 +67,10 @@ app.use((req, res, next) => {
   }
 
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    req.headers["access-control-request-headers"] || "Content-Type, Authorization, X-Requested-With, Accept"
+  );
   res.setHeader("Access-Control-Allow-Credentials", "true");
 
   // Preflight: respond immediately with 200 — do NOT touch MongoDB
